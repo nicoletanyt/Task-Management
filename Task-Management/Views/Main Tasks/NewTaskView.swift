@@ -11,16 +11,17 @@ struct NewTaskView: View {
 	@EnvironmentObject var taskManager: TaskManager
 	@Environment(\.presentationMode) var presentationMode
 	@State var taskTitle = ""
-	@State var priorityLevel: PriorityLevel = .NIL
+	@State var priorityLevel: PriorityLevel = .auto
 	@State var datePicked: Date = Date.now
 	@State var isAlertActive = false
+	@State var parent: Task?
 	
     var body: some View {
 		VStack {
-			Text("Create New Task")
+			Text((parent == nil) ? "Create New Task" : "Create New Subtask in \(parent!.title)")
 				.font(.headline)
 			Form {
-				TextField("Enter the text title", text: $taskTitle)
+				TextField("Enter the title", text: $taskTitle)
 					.onSubmit {
 						createTask()
 					}
@@ -56,9 +57,18 @@ struct NewTaskView: View {
     }
 	
 	func createTask() {
-		let newTask = Task(type: .parent, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
-		taskManager.totalTasks.append(newTask) //Total Tasks
-		print("Added new task \(taskManager.totalTasks.count)")
+		if parent == nil {
+			print("Parent not found")
+			let newParent = Task(type: .parent, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
+			taskManager.totalTasks.append(newParent)
+		} else {
+			// Create new Subtask
+			let newChild = Task(type: .child, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
+			taskManager.totalTasks.append(newChild)
+			if let index = taskManager.totalTasks.firstIndex(where: {$0.id == parent?.id}) {
+				taskManager.totalTasks[index].children.append(newChild)
+			}
+		}
 		presentationMode.wrappedValue.dismiss()
 	}
 }

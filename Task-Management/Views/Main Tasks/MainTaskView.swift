@@ -44,6 +44,9 @@ struct MainTaskView: View {
 					Text("High Priority")
 				}
 			}
+			.onChange(of: taskManager.totalTasks) { _ in
+				taskManager.uncompletedTasks = taskManager.returnUncompleted()
+			}
 		}
     }
 }

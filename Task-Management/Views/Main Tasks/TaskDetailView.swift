@@ -11,23 +11,110 @@ struct TaskDetailView: View {
 	@EnvironmentObject var taskManager: TaskManager
 	@State var task: Task
 	@State var taskChildren: [Task] = []
+	@State var createNew = false
 	
     var body: some View {
 		VStack {
 			Header(task: $task)
 			Divider()
 			List {
-				ForEach(taskChildren) { subTask in
-					Text(subTask.title)
+				Text("Subtasks: ")
+					.font(.headline)
+				ForEach($taskChildren) { $subTask in
+					SubTaskView(subTask: $subTask, datePicked: $subTask.dueDate, priority: $subTask.priority, parentTask: task)
 				}
 			}
 			.onAppear {
-				if let parentTask = taskManager.totalTasks.first(where: {$0.id == task.id}) {
-					taskChildren = parentTask.children
+				updateChildren()
+			}
+			.onChange(of: getParent()) { _ in
+				updateChildren()
+			}
+			Button {
+				createNew = true
+			} label: {
+				HStack {
+					Image(systemName: "plus")
+					Text("Create Subtask")
 				}
 			}
+			.padding(.top, 0)
+			.padding()
+		}
+		.sheet(isPresented: $createNew) {
+			NewTaskView(parent: task)
 		}
     }
+	
+	func getParent() -> Task {
+		return taskManager.totalTasks.first(where: {$0.id == task.id})!
+	}
+	func updateChildren() {
+		if let parentTask = taskManager.totalTasks.first(where: {$0.id == task.id}) {
+			taskChildren = parentTask.children
+		}
+	}
+}
+
+struct SubTaskView: View {
+	@EnvironmentObject var taskManager: TaskManager
+	@Binding var subTask: Task
+	@State var isDetailShown = false
+	@State var editTitle = false
+	@Binding var datePicked: Date
+	@Binding var priority: PriorityLevel
+	var parentTask: Task
+	
+	var body: some View {
+			DisclosureGroup {
+				HStack {
+					DatePicker("Due: ", selection: $datePicked)
+						.datePickerStyle(.compact)
+					Picker("Priority: ", selection: $priority) {
+						ForEach(PriorityLevel.allCases, id: \.self) { item in
+							Text(item.rawValue.capitalized)
+						}
+					}
+				}
+				.font(.body)
+				.onChange(of: datePicked) { newDate in
+					subTask.dueDate = newDate
+					updateSubTask()
+				}
+				.onChange(of: priority) { newPriority in
+					subTask.priority = newPriority
+					updateSubTask()
+				}
+			} label: {
+				TaskView(task: $subTask, isEdit: $editTitle)
+					.onTapGesture {
+						subTask.isCompleted.toggle()
+					}
+					.contextMenu {
+						Button {
+							editTitle = true
+						} label: {
+							Label("Rename", systemImage: "square.and.pencil")
+						}
+					}
+					.onSubmit {
+						updateSubTask()
+					}
+			}
+	}
+	
+	func updateSubTask() {
+		// Update in parent task
+		if let parentIndex = taskManager.totalTasks.firstIndex(where: {$0.id == parentTask.id}) {
+			if let childIndex = taskManager.totalTasks[parentIndex].children.firstIndex(where: {$0.id == subTask.id}) {
+				taskManager.totalTasks[parentIndex].children[childIndex] = subTask
+			}
+		}
+		// Update in total task
+		if let index = taskManager.totalTasks.firstIndex(where: {$0.id == subTask.id}) {
+			taskManager.totalTasks[index] = subTask
+		}
+	}
 }
 
 struct Header: View {

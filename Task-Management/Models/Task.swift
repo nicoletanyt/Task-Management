@@ -18,7 +18,7 @@ struct Task: Identifiable, Hashable, Equatable {
 }
 
 enum PriorityLevel: String, CaseIterable {
-	case high, medium, low, NIL
+	case high, medium, low, auto
 }
 
 enum TaskType {
