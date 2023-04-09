@@ -16,7 +16,7 @@ struct TaskDetailView: View {
     var body: some View {
 		VStack {
 			Header(task: $task)
-			Divider()
+//			Divider()
 			List {
 				Text("Subtasks: ")
 					.font(.headline)
@@ -51,7 +51,7 @@ struct TaskDetailView: View {
 	}
 	func updateChildren() {
 		if let parentTask = taskManager.totalTasks.first(where: {$0.id == task.id}) {
-			taskChildren = parentTask.children
+			taskChildren = taskManager.returnUncompleted(unsortedTasks:  parentTask.children)
 		}
 	}
 }
@@ -61,46 +61,57 @@ struct SubTaskView: View {
 	@Binding var subTask: Task
 	@State var isDetailShown = false
 	@State var editTitle = false
+	
 	@Binding var datePicked: Date
 	@Binding var priority: PriorityLevel
 	var parentTask: Task
 	
 	var body: some View {
-			DisclosureGroup {
-				HStack {
-					DatePicker("Due: ", selection: $datePicked)
-						.datePickerStyle(.compact)
-					Picker("Priority: ", selection: $priority) {
-						ForEach(PriorityLevel.allCases, id: \.self) { item in
-							Text(item.rawValue.capitalized)
-						}
-					}
-				}
-				.font(.body)
-				.onChange(of: datePicked) { newDate in
-					subTask.dueDate = newDate
-					updateSubTask()
-				}
-				.onChange(of: priority) { newPriority in
-					subTask.priority = newPriority
-					updateSubTask()
-				}
+		HStack {
+			Button {
+				subTask.isCompleted.toggle()
+				updateSubTask()
 			} label: {
-				TaskView(task: $subTask, isEdit: $editTitle)
-					.onTapGesture {
-						subTask.isCompleted.toggle()
-					}
-					.contextMenu {
-						Button {
-							editTitle = true
-						} label: {
-							Label("Rename", systemImage: "square.and.pencil")
-						}
-					}
-					.onSubmit {
-						updateSubTask()
-					}
+				Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
 			}
+			.buttonStyle(.plain)
+			if editTitle {
+				TextField(subTask.title, text: $subTask.title)
+					.textFieldStyle(.squareBorder)
+					.onSubmit {
+						editTitle = false
+					}
+			} else {
+				Text(subTask.title)
+					.strikethrough(subTask.isCompleted)
+			}
+			Spacer()
+			HStack {
+				DatePicker("", selection: $subTask.dueDate, displayedComponents: .date)
+					.backgroundStyle(.clear)
+					.border(.clear)
+					.datePickerStyle(.field)
+				Picker("", selection: $subTask.priority) {
+					ForEach(PriorityLevel.allCases, id: \.self) { item in
+						Text(item.rawValue.capitalized)
+					}
+				}
+				.pickerStyle(.menu)
+				.backgroundStyle(.clear)
+				.border(.clear)
+			}
+			.frame(width: (NSApplication.shared.windows.first?.frame.width)!/5)
+		}
+		.onChange(of: subTask, perform: { _ in
+			updateSubTask()
+		})
+		.contextMenu {
+			Button {
+				editTitle = true
+			} label: {
+				Label("Rename", systemImage: "square.and.pencil")
+			}
+		}
 	}
 	
 	func updateSubTask() {
@@ -120,11 +131,12 @@ struct SubTaskView: View {
 struct Header: View {
 	@EnvironmentObject var taskManager: TaskManager
 	@Binding var task: Task
+	@State var childrenCount = 0
 	
 	var body: some View {
 		HStack {
 			VStack {
-				DatePicker("Due Date:", selection: $task.dueDate)
+				DatePicker("Due Date:", selection: $task.dueDate, displayedComponents: .date)
 					.datePickerStyle(.compact)
 					.bold()
 				Picker("Priority level: ", selection: $task.priority) {
@@ -144,9 +156,12 @@ struct Header: View {
 				}
 			})
 			Spacer()
-			Text("\(task.children.count)")
+			Text("\(childrenCount)")
 				.font(.system(size: 50))
 				.padding()
+		}
+		.onChange(of: task.children) { newChildren in
+			childrenCount = taskManager.returnUncompleted(unsortedTasks: newChildren).count
 		}
 	}
 }

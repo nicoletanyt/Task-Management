@@ -40,7 +40,7 @@ struct MainTaskView: View {
 				lowPrTasks = taskManager.sortTasks(priority: .low)
 			}
 			.onChange(of: taskManager.totalTasks) { _ in
-				taskManager.uncompletedTasks = taskManager.returnUncompleted()
+				taskManager.uncompletedTasks = taskManager.returnUncompleted(unsortedTasks: taskManager.totalTasks)
 				highPrTasks = taskManager.sortTasks(priority: .high)
 				medPrTasks = taskManager.sortTasks(priority: .medium)
 				lowPrTasks = taskManager.sortTasks(priority: .low)

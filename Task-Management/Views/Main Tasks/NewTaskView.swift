@@ -25,7 +25,7 @@ struct NewTaskView: View {
 					.onSubmit {
 						createTask()
 					}
-				DatePicker("Enter the due date", selection: $datePicked)
+				DatePicker("Enter the due date", selection: $datePicked, displayedComponents: .date)
 					.datePickerStyle(.field)
 				Picker("Pick a priority level", selection: $priorityLevel) {
 					ForEach(PriorityLevel.allCases, id: \.self) { item in

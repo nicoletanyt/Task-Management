@@ -38,10 +38,10 @@ struct FocusModeView: View {
 					}
 				}
 				.onAppear {
-					taskManager.uncompletedTasks = taskManager.returnUncompleted()
+					taskManager.uncompletedTasks = taskManager.returnUncompleted(unsortedTasks: taskManager.totalTasks)
 				}
 				.onChange(of: taskManager.totalTasks) { updatedAll in
-					taskManager.uncompletedTasks = taskManager.returnUncompleted()
+					taskManager.uncompletedTasks = taskManager.returnUncompleted(unsortedTasks: updatedAll)
 				}
 				.onChange(of: user.timeLeft) { timeLeft in
 					if timeLeft == 0 {

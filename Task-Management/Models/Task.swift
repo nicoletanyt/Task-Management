@@ -39,8 +39,8 @@ class TaskManager: ObservableObject {
 	func priorityTask(unsortedTasks: [Task], priorityLevel: PriorityLevel) -> [Task] {
 		return unsortedTasks.filter({$0.priority == priorityLevel && !$0.isCompleted})
 	}
-	func returnUncompleted() -> [Task] {
-		return self.totalTasks.filter({!$0.isCompleted})
+	func returnUncompleted(unsortedTasks: [Task]) -> [Task] {
+		return unsortedTasks.filter({!$0.isCompleted})
 	}
 	func completedTasks(tasks: [Task]) -> [Task] {
 		return tasks.filter({$0.isCompleted})
