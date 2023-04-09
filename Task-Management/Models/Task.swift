@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Task: Identifiable, Equatable {
+struct Task: Identifiable, Hashable, Equatable {
 	var id = UUID()
 	var type: TaskType
 	var title: String

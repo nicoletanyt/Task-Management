@@ -12,6 +12,7 @@ struct NewTaskView: View {
 	@Environment(\.presentationMode) var presentationMode
 	@State var taskTitle = ""
 	@State var priorityLevel: PriorityLevel = .NIL
+	@State var datePicked: Date = Date.now
 	@State var isAlertActive = false
 	
     var body: some View {
@@ -23,6 +24,8 @@ struct NewTaskView: View {
 					.onSubmit {
 						createTask()
 					}
+				DatePicker("Enter the due date", selection: $datePicked)
+					.datePickerStyle(.field)
 				Picker("Pick a priority level", selection: $priorityLevel) {
 					ForEach(PriorityLevel.allCases, id: \.self) { item in
 						Text(item.rawValue.capitalized)
@@ -53,7 +56,7 @@ struct NewTaskView: View {
     }
 	
 	func createTask() {
-		let newTask = Task(type: .parent, title: taskTitle, dueDate: Date.now, priority: priorityLevel)
+		let newTask = Task(type: .parent, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
 		taskManager.totalTasks.append(newTask) //Total Tasks
 		print("Added new task \(taskManager.totalTasks.count)")
 		presentationMode.wrappedValue.dismiss()
