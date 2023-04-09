@@ -58,7 +58,6 @@ struct NewTaskView: View {
 	
 	func createTask() {
 		if parent == nil {
-			print("Parent not found")
 			let newParent = Task(type: .parent, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
 			taskManager.totalTasks.append(newParent)
 		} else {

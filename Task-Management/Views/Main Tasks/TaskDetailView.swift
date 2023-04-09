@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskDetailView: View {
 	@EnvironmentObject var taskManager: TaskManager
-	@State var task: Task
+	@Binding var task: Task
 	@State var taskChildren: [Task] = []
 	@State var createNew = false
 	
