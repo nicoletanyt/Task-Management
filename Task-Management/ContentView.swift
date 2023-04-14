@@ -22,7 +22,7 @@ struct ContentView: View {
 					SideBar()
 				}
 				VStack {
-					FocusModeView()
+					HomepageView()
 				}
 			}
 			.environmentObject(taskManager)
@@ -75,6 +75,16 @@ struct SideBar: View {
 	
 	var body: some View {
 		List {
+			NavigationLink {
+				HomepageView()
+					.navigationTitle("Homepage")
+			} label: {
+				HStack {
+					Image(systemName: "house.fill")
+					Text("Homepage")
+				}
+			}
+			Divider()
 			NavigationLink {
 				MainTaskView()
 					.navigationTitle("All Tasks")

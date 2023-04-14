@@ -19,6 +19,7 @@
 		A22D947429E2625500CFB516 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D947329E2625500CFB516 /* TimerView.swift */; };
 		A22D947629E262F300CFB516 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D947529E262F300CFB516 /* SettingsView.swift */; };
 		A247414629E26D2C00A43C15 /* TaskDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A247414529E26D2C00A43C15 /* TaskDetailView.swift */; };
+		A247414929E2C32800A43C15 /* HomepageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A247414829E2C32800A43C15 /* HomepageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		A22D947329E2625500CFB516 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		A22D947529E262F300CFB516 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A247414529E26D2C00A43C15 /* TaskDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailView.swift; sourceTree = "<group>"; };
+		A247414829E2C32800A43C15 /* HomepageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomepageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 		A22D946329E25ED400CFB516 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A247414729E2C31D00A43C15 /* Homepage */,
 				A22D946629E25F0900CFB516 /* Settings */,
 				A22D946529E25F0000CFB516 /* Main Tasks */,
 				A22D946429E25EDF00CFB516 /* FocusMode */,
@@ -131,6 +134,14 @@
 				A22D946B29E2601000CFB516 /* User.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		A247414729E2C31D00A43C15 /* Homepage */ = {
+			isa = PBXGroup;
+			children = (
+				A247414829E2C32800A43C15 /* HomepageView.swift */,
+			);
+			path = Homepage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,6 +223,7 @@
 				A22D946929E25F4100CFB516 /* Task.swift in Sources */,
 				A22D945529E25E4C00CFB516 /* Task_ManagementApp.swift in Sources */,
 				A22D947429E2625500CFB516 /* TimerView.swift in Sources */,
+				A247414929E2C32800A43C15 /* HomepageView.swift in Sources */,
 				A22D947229E2625000CFB516 /* FocusModeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
