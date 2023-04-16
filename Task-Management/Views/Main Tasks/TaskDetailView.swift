@@ -9,14 +9,15 @@ import SwiftUI
 
 struct TaskDetailView: View {
 	@EnvironmentObject var taskManager: TaskManager
+	@Environment(\.presentationMode) var presentationMode
 	@Binding var task: Task
 	@State var taskChildren: [Task] = []
 	@State var createNew = false
+	@State var deleted = false
 	
     var body: some View {
 		VStack {
 			Header(task: $task)
-//			Divider()
 			List {
 				Text("Subtasks: ")
 					.font(.headline)
@@ -28,16 +29,32 @@ struct TaskDetailView: View {
 				updateChildren()
 			}
 			.onChange(of: getParent()) { _ in
-				updateChildren()
-			}
-			Button {
-				createNew = true
-			} label: {
-				HStack {
-					Image(systemName: "plus")
-					Text("Create Subtask")
+				if !deleted {
+					updateChildren()
 				}
 			}
+			HStack {
+				Button {
+					createNew = true
+				} label: {
+					HStack {
+						Image(systemName: "plus")
+						Text("Create Subtask")
+					}
+				}
+				Button {
+					deleteTask()
+					deleted = true
+					presentationMode.wrappedValue.dismiss()
+				} label: {
+					HStack {
+						Image(systemName: "trash.fill")
+						Text("Delete Task")
+					}
+					.foregroundColor(Color.red)
+				}
+			}
+			
 			.padding(.top, 0)
 			.padding()
 		}
@@ -46,13 +63,28 @@ struct TaskDetailView: View {
 		}
     }
 	
-	func getParent() -> Task {
-		return taskManager.totalTasks.first(where: {$0.id == task.id})!
+	func getParent() -> Task? {
+		return taskManager.totalTasks.first(where: {$0.id == task.id})
 	}
 	func updateChildren() {
 		if let parentTask = taskManager.totalTasks.first(where: {$0.id == task.id}) {
-			taskChildren = taskManager.returnUncompleted(unsortedTasks:  parentTask.children)
+			taskChildren = taskManager.returnUncompleted(unsortedTasks: parentTask.children)
 		}
+	}
+	func deleteTask() {
+		// removes from total database
+		if task.type == .child {
+			if let parentIndex = taskManager.totalTasks.firstIndex(where: {$0.children.contains(where: {$0.id == task.id})}) {
+				taskManager.totalTasks[parentIndex].children.removeAll(where: {$0.id == task.id})
+			}
+		} else {
+			for i in task.children {
+				// remove all the children too
+				taskManager.totalTasks.removeAll(where: {$0.id == i.id})
+			}
+		}
+		taskManager.totalTasks.removeAll(where: {$0.id == task.id})
+		print("Task Deleted")
 	}
 }
 

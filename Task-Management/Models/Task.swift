@@ -89,4 +89,12 @@ class TaskManager: ObservableObject {
 		}
 		return priorityTasks
 	}
+	
+	func returnTitle(tasks: [Task]) -> [String] {
+		var titles: [String] = []
+		for task in tasks {
+			titles.append(task.title)
+		}
+		return titles
+	}
 }

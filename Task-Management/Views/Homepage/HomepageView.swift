@@ -8,10 +8,21 @@
 import SwiftUI
 
 struct HomepageView: View {
+	@EnvironmentObject var taskManager: TaskManager
+	@EnvironmentObject var user: User
+	@State var highPrTasks: [Task] = []
+	
 	var body: some View {
 		ScrollView {
-			Widget(tasksCount: 1, title: "Due Tomorrow:", taskTitles: ["Homework", "Coffee", "Now"], widgetColor: Color.indigo)
+			Widget(tasksCount: highPrTasks.count, title: "High Priority Tasks", taskTitles: taskManager.returnTitle(tasks: highPrTasks), widgetColor: Color.indigo)
 				.padding()
+		}
+		.onAppear {
+			highPrTasks = taskManager.sortTasks(priority: .high)
+		}
+		.onChange(of: taskManager.totalTasks) { _ in
+			taskManager.uncompletedTasks = taskManager.returnUncompleted(unsortedTasks: taskManager.totalTasks)
+			highPrTasks = taskManager.sortTasks(priority: .high)
 		}
 	}
 }
