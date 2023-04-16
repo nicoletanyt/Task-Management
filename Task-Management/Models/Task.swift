@@ -21,8 +21,8 @@ enum PriorityLevel: String, CaseIterable {
 	case high, medium, low, auto
 }
 
-enum TaskType {
-	case parent, child
+enum TaskType: String, CaseIterable {
+	case Task, SubTask
 }
 
 class TaskManager: ObservableObject {
@@ -34,7 +34,10 @@ class TaskManager: ObservableObject {
 	}
 	
 	func parentTasks(tasks: [Task]) -> [Task] {
-		return tasks.filter({$0.type == .parent})
+		return tasks.filter({$0.type == .Task})
+	}
+	func childTasks(tasks: [Task]) -> [Task] {
+		return tasks.filter({$0.type == .SubTask})
 	}
 	func priorityTask(unsortedTasks: [Task], priorityLevel: PriorityLevel) -> [Task] {
 		return unsortedTasks.filter({$0.priority == priorityLevel && !$0.isCompleted})

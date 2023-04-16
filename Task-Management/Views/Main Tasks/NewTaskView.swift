@@ -58,11 +58,11 @@ struct NewTaskView: View {
 	
 	func createTask() {
 		if parent == nil {
-			let newParent = Task(type: .parent, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
+			let newParent = Task(type: .Task, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
 			taskManager.totalTasks.append(newParent)
 		} else {
 			// Create new Subtask
-			let newChild = Task(type: .child, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
+			let newChild = Task(type: .SubTask, title: taskTitle, dueDate: datePicked, priority: priorityLevel)
 			taskManager.totalTasks.append(newChild)
 			if let index = taskManager.totalTasks.firstIndex(where: {$0.id == parent?.id}) {
 				taskManager.totalTasks[index].children.append(newChild)

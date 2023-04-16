@@ -117,7 +117,7 @@ struct TaskSelectView: View {
 		if let index = taskManager.totalTasks.firstIndex(where: {$0.id == task.id}) {
 			taskManager.totalTasks[index].isCompleted = true
 		}
-		if task.type == .child {
+		if task.type == .SubTask {
 			// If it's a subtask, mark it as complete in the parentTask child
 			if let parentIndex = taskManager.totalTasks.firstIndex(where: {$0.children.contains(where: {$0.id == task.id})}) {
 				if let childIndex = taskManager.totalTasks[parentIndex].children.firstIndex(where: {$0.id == task.id}) {

@@ -73,7 +73,7 @@ struct TaskDetailView: View {
 	}
 	func deleteTask() {
 		// removes from total database
-		if task.type == .child {
+		if task.type == .SubTask {
 			if let parentIndex = taskManager.totalTasks.firstIndex(where: {$0.children.contains(where: {$0.id == task.id})}) {
 				taskManager.totalTasks[parentIndex].children.removeAll(where: {$0.id == task.id})
 			}

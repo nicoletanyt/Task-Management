@@ -12,11 +12,11 @@ struct SettingsView: View {
 	
 	var body: some View {
 		List {
-			Section {
-				//TODO: ADD A PICKER FOR START PAGE CONTENT (TUTORIAL? ALL TASKS? FOCUS MODE?)
-			} header: {
-				Text("General")
-			}
+//			Section {
+//				//TODO: ADD A PICKER FOR START PAGE CONTENT (TUTORIAL? ALL TASKS? FOCUS MODE?)
+//			} header: {
+//				Text("General")
+//			}
 			Section {
 				Toggle("Focus Mode: ", isOn: $user.focusMode)
 					.toggleStyle(.switch)
@@ -33,12 +33,12 @@ struct SettingsView: View {
 				Text("Focus Mode Preferences")
 			}
 			
-			Section {
-				//TODO: ADD A COLOUR PICKER FOR COLOUR SCHEME
-				//TODO: SLIDER/STEPPER FOR FONT SIZE
-			} header: {
-				Text("Appearance")
-			}
+//			Section {
+//				//TODO: ADD A COLOUR PICKER FOR COLOUR SCHEME
+//				//TODO: SLIDER/STEPPER FOR FONT SIZE
+//			} header: {
+//				Text("Appearance")
+//			}
 		}
 	}
 }
