@@ -11,18 +11,23 @@ struct HomepageView: View {
 	@EnvironmentObject var taskManager: TaskManager
 	@EnvironmentObject var user: User
 	@State var highPrTasks: [Task] = []
+	@State var overdueTasks: [Task] = []
 	
 	var body: some View {
 		ScrollView {
-			Widget(tasksCount: highPrTasks.count, title: "High Priority Tasks", taskTitles: taskManager.returnTitle(tasks: highPrTasks), widgetColor: Color.indigo)
+			Widget(tasksCount: highPrTasks.count, title: "High Priority Tasks", taskTitles: taskManager.returnTitle(tasks: highPrTasks), widgetColor: Color.red)
 				.padding()
+			Widget(tasksCount: overdueTasks.count, title: "Overdue Tasks", taskTitles: taskManager.returnTitle(tasks: taskManager.returnOverdue()), widgetColor: Color.indigo)
+				.padding(.horizontal)
 		}
 		.onAppear {
 			highPrTasks = taskManager.sortTasks(priority: .high)
+			overdueTasks = taskManager.returnOverdue()
 		}
 		.onChange(of: taskManager.totalTasks) { _ in
 			taskManager.uncompletedTasks = taskManager.returnUncompleted(unsortedTasks: taskManager.totalTasks)
 			highPrTasks = taskManager.sortTasks(priority: .high)
+			overdueTasks = taskManager.returnOverdue()
 		}
 	}
 }

@@ -97,4 +97,15 @@ class TaskManager: ObservableObject {
 		}
 		return titles
 	}
+	
+	func returnOverdue() -> [Task] {
+		let startDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+		var overdueTasks: [Task] = []
+		for task in self.uncompletedTasks {
+			if task.dueDate <= startDate {
+				overdueTasks.append(task)
+			}
+		}
+		return overdueTasks
+	}
 }
